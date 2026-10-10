@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10131d">
+<title>Longbridge—Khalvien</title>
+<style>
+:root{--bg:#0b0d14;--panel:#131723;--panel2:#191f2d;--line:#2a3142;--text:#eef2fb;--muted:#9ba7bd;--accent:#b7f36b;--accent2:#d4ff9b;--danger:#ff8c8c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#182131 0%,var(--bg) 54%);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+.wrap{width:min(1080px,calc(100% - 32px));margin:auto;padding:28px 0 50px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:var(--accent);color:#10150a;display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 0 30px #b7f36b22}
+h1{font-size:clamp(22px,4vw,30px);letter-spacing:-.8px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:2px}
+.nav{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:11px;cursor:pointer;font:inherit;font-weight:650}.btn:hover{filter:brightness(1.12)}.btn.primary{background:var(--accent);color:#12170d;border-color:var(--accent)}.btn.danger{color:var(--danger)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.85fr);gap:18px;align-items:start}
+.card{background:linear-gradient(160deg,#171c29f5,#111520f5);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 60px #0002}
+.card h2{margin:0 0 5px;font-size:19px;letter-spacing:-.3px}.hint{margin:0 0 20px;color:var(--muted);font-size:13px}
+label{display:block;color:#dce3f1;font-size:13px;font-weight:650;margin:13px 0 7px}
+input,select,textarea{width:100%;border:1px solid #333c50;background:#0c1019;color:var(--text);padding:12px 13px;border-radius:11px;font:inherit;outline:none}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #b7f36b19}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.form-actions{display:flex;gap:9px;margin-top:19px;flex-wrap:wrap}.tiny{font-size:12px;color:var(--muted);margin-top:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.stat{background:var(--panel2);border:1px solid var(--line);padding:14px;border-radius:14px}.stat strong{font-size:24px;display:block;letter-spacing:-.5px}.stat span{color:var(--muted);font-size:12px}
+.toolbar{display:flex;gap:9px;margin:16px 0;flex-wrap:wrap}.toolbar input{flex:1;min-width:150px}
+.records{display:grid;gap:10px}.record{border:1px solid var(--line);background:#10141e;border-radius:14px;padding:14px}.recordtop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.recordname{font-weight:750}.meta{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.pill{display:inline-block;padding:4px 8px;border-radius:99px;font-size:11px;font-weight:750;background:#2b3140;color:#dbe4f4}.pill.complete{background:#243b25;color:#c8ffa2}.pill.pending{background:#42351e;color:#ffdb8b}.progress{height:6px;background:#2a3140;border-radius:99px;overflow:hidden;margin:12px 0 8px}.bar{height:100%;background:var(--accent);border-radius:99px}.recordbottom{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}.record select{width:auto;max-width:170px;padding:7px 9px;font-size:12px}.smallbtn{padding:7px 9px;font-size:12px}.empty{padding:24px 12px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+.notice{padding:12px 14px;border-radius:12px;background:#252c3b;color:#d5deee;font-size:12px;margin-top:14px;border:1px solid #343d50}.notice b{color:var(--accent2)}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#e4ffc5;color:#15200c;padding:11px 16px;border-radius:12px;font-weight:750;box-shadow:0 8px 30px #0005;display:none;z-index:5}
+footer{text-align:center;color:#768198;font-size:12px;margin-top:24px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.wrap{width:min(100% - 22px,680px);padding-top:18px}.card{padding:17px}.stats{gap:7px}.stat{padding:11px}.stat strong{font-size:21px}}
+@media(max-width:430px){.grid2{grid-template-columns:1fr}.full{grid-column:auto}.stats{grid-template-columns:repeat(3,1fr)}.recordtop{align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand"><div class="logo">L</div><div><h1>Longbridge—Khalvien</h1><div class="sub">Account Registration &amp; Progress Tracker</div></div></div>
+  <div class="nav"><button class="btn" id="exportBtn">Export Excel CSV</button><button class="btn" id="importBtn">Import CSV</button><input type="file" id="importFile" accept=".csv,text/csv" hidden></div>
+</header>
+<main class="layout">
+<section class="card">
+  <h2 id="formTitle">Register a user</h2>
+  <p class="hint">Add the user's details, then update their progress from the dashboard.</p>
+  <form id="userForm">
+    <input id="editId" type="hidden">
+    <div class="grid2">
+      <div class="full"><label for="name">Name *</label><input id="name" required maxlength="100" placeholder="e.g., Khalvien"></div>
+      <div class="full"><label for="telegram">Telegram username</label><input id="telegram" maxlength="100" placeholder="@ccwkhal"></div>
+      <div class="full"><label for="email">Email</label><input id="email" type="email" maxlength="254" placeholder="name@example.com"></div>
+      <div class="full"><label for="uid">UID</label><input id="uid" maxlength="100" placeholder="Enter account UID"></div>
+      <div><label for="status">Registration status</label><select id="status"><option>Not started</option><option>Pending</option><option>In progress</option><option>Completed</option><option>Needs review</option></select></div>
+      <div><label for="progress">Progress</label><select id="progress"><option value="0">0%</option><option value="25">25%</option><option value="50">50%</option><option value="75">75%</option><option value="100">100%</option></select></div>
+      <div class="full"><label for="notes">Notes (optional)</label><input id="notes" maxlength="500" placeholder="Optional progress notes"></div>
+    </div>
+    <div class="form-actions"><button class="btn primary" type="submit" id="saveBtn">Save registration</button><button class="btn" type="button" id="resetBtn">Clear form</button></div>
+    <p class="tiny">* Name is required. Only enter details you are authorized to store.</p>
+  </form>
+  <div class="notice"><b>Saving note:</b> This GitHub Pages version saves records in this browser on this device. It does not sync between users or devices unless a backend database is added.</div>
+</section>
+<section class="card">
+  <h2>Progress dashboard</h2><p class="hint">Search records, change status, or export a spreadsheet.</p>
+  <div class="stats"><div class="stat"><strong id="totalCount">0</strong><span>Total users</span></div><div class="stat"><strong id="activeCount">0</strong><span>In progress</span></div><div class="stat"><strong id="completeCount">0</strong><span>Completed</span></div></div>
+  <div class="toolbar"><input id="search" placeholder="Search name, Telegram, email, UID…"><select id="filterStatus" aria-label="Filter by status"><option value="">All statuses</option><option>Not started</option><option>Pending</option><option>In progress</option><option>Completed</option><option>Needs review</option></select></div>
+  <div id="records" class="records"><div class="empty">No registrations yet. Add one using the form.</div></div>
+  <div class="form-actions"><button class="btn" id="backupBtn">Download JSON backup</button><button class="btn danger" id="clearAllBtn">Clear all records</button></div>
+</section>
+</main>
+<footer>Longbridge—Khalvien · Registration data stays in your browser in this demo version.</footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(() => {
+  const KEY = 'longbridge-khalvien-records-v1';
+  const $ = id => document.getElementById(id);
+  let records = [];
+  try { records = JSON.parse(localStorage.getItem(KEY) || '[]'); if (!Array.isArray(records)) records=[]; } catch { records=[]; }
+  const statuses = ['Not started','Pending','In progress','Completed','Needs review'];
+  const safe = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const save = () => { localStorage.setItem(KEY, JSON.stringify(records)); render(); };
+  function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',2200);}
+  function resetForm(){ $('userForm').reset(); $('editId').value=''; $('formTitle').textContent='Register a user'; $('saveBtn').textContent='Save registration'; $('progress').value='0'; }
+  function render(){
+    $('totalCount').textContent=records.length;
+    $('activeCount').textContent=records.filter(r=>r.status==='In progress'||r.status==='Pending').length;
+    $('completeCount').textContent=records.filter(r=>r.status==='Completed').length;
+    const q=$('search').value.trim().toLowerCase(), filter=$('filterStatus').value;
+    const list=records.filter(r=>(!filter||r.status===filter)&&[r.name,r.telegram,r.email,r.uid,r.notes].some(v=>String(v||'').toLowerCase().includes(q)));
+    const root=$('records');
+    if(!list.length){root.innerHTML='<div class="empty">'+(records.length?'No matching registrations.':'No registrations yet. Add one using the form.')+'</div>';return;}
+    root.innerHTML=list.slice().sort((a,b)=>b.updatedAt-a.updatedAt).map(r=>{
+      const p=Math.max(0,Math.min(100,Number(r.progress)||0));
+      const pill=r.status==='Completed'?'complete':(r.status==='Pending'?'pending':'');
+      return `<article class="record"><div class="recordtop"><div><div class="recordname">${safe(r.name)}</div><div class="meta">${safe(r.telegram||'No Telegram username')}</div><div class="meta">${safe(r.email||'No email')} · UID: ${safe(r.uid||'—')}</div></div><span class="pill ${pill}">${safe(r.status)}</span></div><div class="progress"><div class="bar" style="width:${p}%"></div></div><div class="recordbottom"><span class="meta">${p}% complete${r.notes?' · '+safe(r.notes):''}</span><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select aria-label="Change status" data-status="${safe(r.id)}">${statuses.map(s=>`<option ${s===r.status?'selected':''}>${safe(s)}</option>`).join('')}</select><select aria-label="Change progress" data-progress="${safe(r.id)}">${[0,25,50,75,100].map(n=>`<option value="${n}" ${n===p?'selected':''}>${n}%</option>`).join('')}</select><button class="btn smallbtn" data-edit="${safe(r.id)}">Edit</button><button class="btn smallbtn danger" data-delete="${safe(r.id)}">Delete</button></div></div><div class="meta" style="margin-top:8px">Updated: ${new Date(r.updatedAt).toLocaleString()}</div></article>`;
+    }).join('');
+  }
+  $('userForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const id=$('editId').value;
+    const old=records.find(r=>r.id===id);
+    const item={id:id||((crypto.randomUUID&&crypto.randomUUID())||String(Date.now())+Math.random()),name:$('name').value.trim(),telegram:$('telegram').value.trim(),email:$('email').value.trim(),uid:$('uid').value.trim(),status:$('status').value,progress:Number($('progress').value),notes:$('notes').value.trim(),createdAt:old?.createdAt||Date.now(),updatedAt:Date.now()};
+    if(!item.name){toast('Please enter a name.');return;}
+    if(old) records=records.map(r=>r.id===id?item:r); else records.push(item);
+    save();resetForm();toast(old?'Registration updated':'Registration saved');
+  });
+  $('resetBtn').addEventListener('click',resetForm);
+  $('search').addEventListener('input',render);$('filterStatus').addEventListener('change',render);
+  $('records').addEventListener('change',e=>{
+    const s=e.target.dataset.status,p=e.target.dataset.progress;
+    if(s||p){const id=s||p;const r=records.find(x=>x.id===id);if(!r)return;if(s)r.status=e.target.value;if(p)r.progress=Number(e.target.value);r.updatedAt=Date.now();if(r.status==='Completed')r.progress=100;save();toast('Progress saved');}
+  });
+  $('records').addEventListener('click',e=>{
+    const edit=e.target.dataset.edit,del=e.target.dataset.delete;
+    if(edit){const r=records.find(x=>x.id===edit);if(!r)return;$('editId').value=r.id;$('name').value=r.name;$('telegram').value=r.telegram;$('email').value=r.email;$('uid').value=r.uid;$('status').value=r.status;$('progress').value=String(r.progress);$('notes').value=r.notes;$('formTitle').textContent='Edit registration';$('saveBtn').textContent='Update registration';window.scrollTo({top:0,behavior:'smooth'});}
+    if(del){const r=records.find(x=>x.id===del);if(r&&confirm(`Delete registration for ${r.name}?`)){records=records.filter(x=>x.id!==del);save();toast('Registration deleted');}}
+  });
+  function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"';}
+  function download(name,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  $('exportBtn').addEventListener('click',()=>{
+    const cols=['name','telegram','email','uid','status','progress','notes','createdAt','updatedAt'];
+    const csv=[cols.join(','),...records.map(r=>cols.map(k=>csvCell(r[k])).join(','))].join('\r\n');
+    download('longbridge-khalvien-records.csv','\ufeff'+csv,'text/csv;charset=utf-8');toast('CSV spreadsheet exported');
+  });
+  $('backupBtn').addEventListener('click',()=>download('longbridge-khalvien-backup.json',JSON.stringify(records,null,2),'application/json'));
+  $('clearAllBtn').addEventListener('click',()=>{if(records.length&&confirm('Delete every saved record from this browser? This cannot be undone.')){records=[];save();resetForm();toast('All local records cleared');}});
+  $('importBtn').addEventListener('click',()=>$('importFile').click());
+  $('importFile').addEventListener('change',async e=>{
+    const file=e.target.files[0];if(!file)return;
+    try{
+      const text=await file.text();const lines=text.replace(/^\ufeff/,'').split(/\r?\n/).filter(Boolean);
+      function parseLine(line){const out=[];let v='',quoted=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'&&quoted&&line[i+1]==='"'){v+='"';i++;}else if(c==='"'){quoted=!quoted;}else if(c===','&&!quoted){out.push(v);v='';}else v+=c;}out.push(v);return out;}
+      const heads=parseLine(lines.shift()).map(x=>x.trim());
+      const imported=lines.map(line=>{const vals=parseLine(line),o={};heads.forEach((h,i)=>o[h]=vals[i]||'');return o;}).filter(r=>r.name).map(r=>({id:(crypto.randomUUID&&crypto.randomUUID())||String(Date.now())+Math.random(),name:r.name,telegram:r.telegram||'',email:r.email||'',uid:r.uid||'',status:statuses.includes(r.status)?r.status:'Pending',progress:Math.max(0,Math.min(100,Number(r.progress)||0)),notes:r.notes||'',createdAt:Number(r.createdAt)||Date.now(),updatedAt:Number(r.updatedAt)||Date.now()}));
+      records=records.concat(imported);save();toast(`Imported ${imported.length} record(s)`);
+    }catch{toast('Could not import that CSV file');}
+    e.target.value='';
+  });
+  render();
+})();
+</script>
+</body>
+</html>
